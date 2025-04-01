@@ -21,14 +21,17 @@ const Weather: FC<WeatherState> = ({weather}) => {
     console.log("today: ",tomorrow)
    
   return (
-    <div className="flex flex-col gap-10">
-         <div className='min-w-64 bg-white px-6 py-3 rounded-xl shadow-lg flex flex-col gap-6'>
-          <h1>{weather.city.name}, {weather.city.country}</h1> 
-          <h1>Sunrise: {sunrise}</h1> 
-          <h1>Sunset: {sunset}</h1>           
-    </div>
-    
-   {weather && <WeatherCard list={today}/>}
+    <div className="flex flex-col items-center gap-10">
+         <div className='bg-white px-6 py-3 rounded-xl shadow-lg flex flex-col gap-6'>
+            <h1>{weather.city.name}, {weather.city.country}</h1> 
+            <h1>Sunrise: {sunrise}</h1> 
+            <h1>Sunset: {sunset}</h1>           
+        </div>
+        <div>
+        {/* {weather && <WeatherCard list={today} tomorrow={tomorrow}/>} */}
+        {weather && <WeatherCard list={weather.list}/>}
+        </div>
+   
     </div>
    
   )

@@ -1,8 +1,4 @@
-// api.openweathermap.org/data/2.5/forecast?q={city name}&appid={API key}
-// api.openweathermap.org/data/2.5/forecast?q={city name},{country code}&appid={API key}
-// api.openweathermap.org/data/2.5/forecast?q={city name},{state code},{country code}&appid={API key}
-// e73c65919d0f5c19d280cb2a461c1ab4
-// 'api.openweathermap.org/data/2.5/forecast?q={ktm},{+977}&appid={e73c65919d0f5c19d280cb2a461c1ab4}'
+
 import {put, call, all, takeEvery} from 'redux-saga/effects'
 
 import { PayloadAction } from '@reduxjs/toolkit'
@@ -18,7 +14,7 @@ interface Input {
 }
 
 const getWeatherApi = async (input: string) => {
-    const res = await fetch(`http://api.openweathermap.org/data/2.5/forecast?units=metric&q=${input}&appid=e73c65919d0f5c19d280cb2a461c1ab4`)
+    const res = await fetch(`http://api.openweathermap.org/data/2.5/forecast?units=metric&q=${input}&appid=${import.meta.env.VITE_OPENWEATHERMAP_TOKEN}`)
     return await res.json()
 }
 export function* fetchWeather(action: PayloadAction<Input>){

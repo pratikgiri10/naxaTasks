@@ -4,8 +4,11 @@ export type Temp = {
     temp: string
 }
 export type List = {
+    dt: string,
     dt_txt: string,
-    weather: string,
+    weather: [{
+        description: string
+    }],
     wind: string,
     main: Temp
 }
@@ -32,8 +35,11 @@ const initialState: WeatherState = {
             sunset: ''
         },
         list: [{
+            dt: '',
             dt_txt: '',
-            weather: '',
+            weather: [{
+                description: ''
+            }],
             wind: '',
             main: {
                 temp: ''

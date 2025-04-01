@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector} from "./hooks/hooks"
 import WeatherComponent from "./components/Weather"
 import {Weather} from './sagas/slice'
@@ -6,7 +6,8 @@ import {Weather} from './sagas/slice'
 function App() {
   const [input, setInput] = useState('')
   const weather = useAppSelector((state) => state.weather.weather)
-//  console.log(weather)
+
+ console.log(weather)
   const dispatch = useAppDispatch()
  
   const handleFetchWeather = () => {
@@ -16,6 +17,7 @@ function App() {
   setInput('')
   
   }
+  
 
   return (
     <div className="min-h-screen flex flex-col gap-6 justify-center items-center bg-gray-500">
@@ -30,7 +32,7 @@ function App() {
         onClick={handleFetchWeather}
         className="bg-black text-white px-2 py-1 text-xl duration-300 active:scale-90">Check Weather</button>
         <div>
-          {weather && <WeatherComponent weather={weather}/>}
+          { weather.list.length > 1 && <WeatherComponent weather={weather}/>}
           
         </div>
     </div>
