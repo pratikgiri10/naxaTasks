@@ -1,4 +1,4 @@
-import logo from '../../assets/Emblem_of_Nepal.svg'
+import logo from '../../assets/logo.png'
 import { NavLink } from 'react-router-dom'
 import Button from '../Button'
 import nep from '../../assets/Rectangle 2075.png'
@@ -23,14 +23,14 @@ const Navbar = () => {
     <div className='flex item-center justify-between'>
         {/* logo */}
         <div className='flex gap-2 items-center'>
-            <div className='w-16'>
+            <div className='w-[412px]'>
             <img src={logo} alt="" className='w-full' />
             </div>
-            <div>
+            {/* <div>
                 <h1>कर्णाली प्रदेश सरकार</h1>
                 <h1>मुख्यमन्त्री तथा मन्त्रिपरिषद्को कार्यालय</h1>
                 <h1>Project Information Management System</h1>
-            </div>
+            </div> */}
             
         </div>
         {/* menu */}
