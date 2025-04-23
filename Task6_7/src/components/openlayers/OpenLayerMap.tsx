@@ -1,15 +1,12 @@
 import Map from 'ol/Map';
-
-
 import View from 'ol/View';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import Link from 'ol/interaction/Link';
 import FullScreen from 'ol/control/FullScreen.js';
 import {defaults as defaultControls} from 'ol/control/defaults.js';
-import { OSM, StadiaMaps, Vector } from 'ol/source';
+import { OSM, StadiaMaps} from 'ol/source';
 import TileLayer from 'ol/layer/Tile';
 import LayerGroup from 'ol/layer/Group';
-import { LineString, MultiPoint, Point, Polygon } from 'ol/geom';
+import { LineString, MultiPoint, Polygon } from 'ol/geom';
 import { Feature } from 'ol';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -17,53 +14,57 @@ import Fill from 'ol/style/Fill';
 import Style from 'ol/style/Style';
 import CircleStyle from 'ol/style/Circle'
 import { fromLonLat } from 'ol/proj';
-import GeoJSON from 'ol/format/GeoJSON';
 
 
 const OpenLayerMap = () => {
     const mapRef = useRef<HTMLDivElement>(null)
-    const [mapData, setMapData] = useState<Map>()
+    const [map, setMap] = useState<Map>()
     const [baseLayer, setBaseLayer] = useState('osm')
+
     const handleZoomIn = () => {
-      const view = mapData?.getView()
+      const view = map?.getView()
       const zoom = view?.getZoom()
       console.log(zoom)
       view?.setZoom(zoom! + 1)
     }
     const handleZoomOut = () => {
-      const view = mapData?.getView()
+      const view = map?.getView()
       const zoom = view?.getZoom()
       view?.setZoom(zoom! - 1)
     }
+
     const baseLayerSwitcher = (e: ChangeEvent<HTMLInputElement>) => {
      setBaseLayer(e.target.value)
+    
     }
-    useEffect(() => {
-  
-      mapData?.getAllLayers().forEach((elem) => {
-        const baseLayerTitle = elem.getProperties().title
-        elem.setVisible(baseLayer == baseLayerTitle)      
+
+    useEffect(() => {  
+      map?.getLayers().forEach((layer) => {
+        if(layer.get('title') === 'BaseLayer'){
+          console.log(layer)
+          layer.getLayersArray().forEach((subLayer) => {
+             const baseLayerTitle = subLayer.getProperties().title
+              console.log(baseLayerTitle)
+              subLayer.setVisible(baseLayer == baseLayerTitle)     
+          })
+        }  
+        
       })
   
-    },[baseLayer])
-      
+    },[baseLayer])      
      
     
     useEffect(() => {
+      if(!mapRef.current) return
       const map = new Map({
         controls: defaultControls().extend([new FullScreen()]),
         target: mapRef.current as HTMLDivElement,
-        // layers: [
-        //   new TileLayer({
-        //     source: new OSM()
-        //   }),
-         
-        // ],
         view: new View({        
           center: [0,0],
           zoom: 2,
         }),
       });
+
       map.on('click', (e) => {
         console.log(e.coordinate)
        })
@@ -76,10 +77,7 @@ const OpenLayerMap = () => {
          })
         })
         
-       })
-       //geojson object
-      
-     
+       })     
        const line = new LineString([fromLonLat([85.3240, 27.7172]),
        fromLonLat([77.2090, 28.6139])])
         const point = new MultiPoint( [[-2e6, -1e6],
@@ -100,7 +98,7 @@ const OpenLayerMap = () => {
         const polyFeature = new Feature({
           geometry: polygon
         })
-        const feature = new Feature({
+        const pointFeature = new Feature({
           geometry: point
         })
         
@@ -110,8 +108,8 @@ const OpenLayerMap = () => {
         const polyVectorSource = new VectorSource({
           features: [polyFeature]
         })
-        const vectorSource = new VectorSource({
-          features: [feature]
+        const pointVectorSource = new VectorSource({
+          features: [pointFeature]
         })
   
         const lineVectorLayer = new VectorLayer({
@@ -121,8 +119,8 @@ const OpenLayerMap = () => {
           source: polyVectorSource,
           
         })
-        const vectorLayer = new VectorLayer({
-          source: vectorSource,
+        const pointVectorLayer = new VectorLayer({
+          source: pointVectorSource,
           style: styles
         })
       
@@ -142,12 +140,24 @@ const OpenLayerMap = () => {
       // map.addLayer(vectorLayer)
       const baseLayerGroup = new LayerGroup({
         layers: [
-          openStreetMap, stadiaMap,
-           vectorLayer, polyVectorLayer, lineVectorLayer
-        ]
+          openStreetMap, stadiaMap
+         
+        ],
+        properties: {
+          title: 'BaseLayer'
+        }
+      })
+      const vectorLayerGroup = new LayerGroup({
+        layers: [
+          pointVectorLayer, polyVectorLayer, lineVectorLayer
+        ],
+        properties: {
+          title: 'VectorLayer'
+        }
       })
       map.addLayer(baseLayerGroup)
-      setMapData(map)
+      map.addLayer(vectorLayerGroup)
+      setMap(map)
       
       return () => map.setTarget(undefined);
     }, [])
