@@ -1,33 +1,36 @@
 import { useQuery } from '@tanstack/react-query'
-import { FetchData, fetchPost } from './ApiTodo'
+import { FetchData, fetchPost } from './ApiPost'
+import { useSelector } from 'react-redux'
+import { RootState } from '../store/store'
 
 const GetDetails = () => {
-    const {isPending, isError, data, error, refetch} = useQuery({
-        queryKey: ['todos'],
-        queryFn: fetchPost,
-        enabled: false
-        
-    })
+   const data = useSelector((state: RootState) => state.post.post)
+   console.log(data)
 
        
   return (
-    <div>
-        <button 
-        onClick={() => refetch()}
-        >Fetch Post</button>
-        {isPending ?  <span>Loading...</span>: (isError ? <span>Error: {error.message}</span> : (
-            <div className='flex flex-col gap-10 justify-center items-start'>
-            {data.data.map((post: FetchData) => (
-             <div key={post.id} className='flex justify-between gap-10 items-center'>
-                 <h1>Id: {post.id}</h1>
-                 <h1>User Id: {post.userId}</h1>
-                 <h1>Title: {post.title}</h1>
-                 <h1>Body: {post.body}</h1>
-             </div>
-            ))}
-     </div>
+    <div className="overflow-x-auto">
+    <table className="min-w-full border-collapse">
+      <thead>
+        <tr className="bg-gray-100">
+          <th className="p-2 border text-left">Id</th>
+          <th className="p-2 border text-left">User Id</th>
+          <th className="p-2 border text-left">Title</th>
+          <th className="p-2 border text-left">Body</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((post) => (
+          <tr key={post.id} className="border-b hover:bg-gray-50">
+            <td className="p-2 border">{post.id}</td>
+            <td className="p-2 border">{post.userId}</td>
+            <td className="p-2 border">{post.title}</td>
+            <td className="p-2 border">{post.body}</td>
+          </tr>
         ))}
-    </div>
+      </tbody>
+    </table>
+  </div>
   )
 }
 

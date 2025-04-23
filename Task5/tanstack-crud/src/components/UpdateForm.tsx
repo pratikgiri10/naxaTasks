@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
-import { updatePost } from "./ApiTodo"
+import { updatePost } from "./ApiPost"
 
 export interface UpdateInputs {
     id: number | null,

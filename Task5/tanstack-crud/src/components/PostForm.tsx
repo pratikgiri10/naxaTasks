@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from "react-hook-form"
-import { createPost } from "./ApiTodo"
+import { createPost } from "./ApiPost"
 import { useMutation } from "@tanstack/react-query"
 import { useEffect } from "react"
 export type Inputs = {
